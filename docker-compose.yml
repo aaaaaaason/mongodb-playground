@@ -3,25 +3,40 @@ services:
   mongodb-rs0-0:
     image: mongo:4.0.22-xenial
     container_name: mongodb-rs0-0
+    command: "mongod --auth --keyFile /etc/rs0-keyfile --replSet rs0"
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: password
     ports:
       - "27017:27017"
     volumes:
-      - ./mongod-rs0.conf:/etc/mongod.conf
+      - ./rs0-keyfile:/etc/rs0-keyfile
     restart: always
 
   mongodb-rs0-1:
     image: mongo:4.0.22-xenial
     container_name: mongodb-rs0-1
+    command: "mongod --auth --keyFile /etc/rs0-keyfile --replSet rs0"
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: password
     ports:
       - "27018:27017"
     volumes:
-      - ./mongod-rs0.conf:/etc/mongod.conf
+      - ./rs0-keyfile:/etc/rs0-keyfile
+    restart: always
+
+  mongodb-rs0-2:
+    image: mongo:4.0.22-xenial
+    container_name: mongodb-rs0-2
+    command: "mongod --auth --keyFile /etc/rs0-keyfile --replSet rs0"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: password
+    ports:
+      - "27019:27017"
+    volumes:
+      - ./rs0-keyfile:/etc/rs0-keyfile
     restart: always
 
   
