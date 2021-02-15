@@ -3,66 +3,66 @@ services:
   mongodb-rs0-0:
     image: mongo:4.0.22-xenial
     container_name: mongodb-rs0-0
-    command: "mongod --shardsvr --auth --keyFile /etc/rs0-keyfile --replSet rs0"
+    command: "mongod --shardsvr --auth --keyFile /etc/keyfile --replSet rs0"
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: password
     ports:
       - "27017:27018"
     volumes:
-      - ./rs0-keyfile:/etc/rs0-keyfile
+      - ./keyfile:/etc/keyfile
     restart: always
 
   mongodb-rs0-1:
     image: mongo:4.0.22-xenial
     container_name: mongodb-rs0-1
-    command: "mongod --shardsvr --auth --keyFile /etc/rs0-keyfile --replSet rs0"
+    command: "mongod --shardsvr --auth --keyFile /etc/keyfile --replSet rs0"
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: password
     ports:
       - "27018:27018"
     volumes:
-      - ./rs0-keyfile:/etc/rs0-keyfile
+      - ./keyfile:/etc/keyfile
     restart: always
 
   mongodb-rs0-2:
     image: mongo:4.0.22-xenial
     container_name: mongodb-rs0-2
-    command: "mongod --shardsvr --auth --keyFile /etc/rs0-keyfile --replSet rs0"
+    command: "mongod --shardsvr --auth --keyFile /etc/keyfile --replSet rs0"
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: password
     ports:
       - "27019:27018"
     volumes:
-      - ./rs0-keyfile:/etc/rs0-keyfile
+      - ./keyfile:/etc/keyfile
     restart: always
 
   mongodb-cfg-0:
     image: mongo:4.0.22-xenial
     container_name: mongodb-cfg-0
-    command: "mongod --configsvr --keyFile /etc/rs0-keyfile --replSet cfg"
+    command: "mongod --configsvr --keyFile /etc/keyfile --replSet cfg"
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: password
     ports:
       - "27020:27019"
     volumes:
-      - ./rs0-keyfile:/etc/rs0-keyfile
+      - ./keyfile:/etc/keyfile
     restart: always
 
   mongos:
     image: mongo:4.0.22-xenial
     container_name: mongos
-    command: "mongos --port 27017 --configdb cfg/mongodb-cfg-0:27019 --keyFile /etc/rs0-keyfile --bind_ip_all"
+    command: "mongos --port 27017 --configdb cfg/mongodb-cfg-0:27019 --keyFile /etc/keyfile --bind_ip_all"
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: password
     ports:
       - "27021:27017"
     volumes:
-      - ./rs0-keyfile:/etc/rs0-keyfile
+      - ./keyfile:/etc/keyfile
     restart: always
 
 

@@ -1,0 +1,69 @@
+version: '3'
+services:
+  mongodb-rs0-0:
+    image: mongo:4.0.22-xenial
+    container_name: mongodb-rs0-0
+    command: "mongod --shardsvr --auth --keyFile /etc/keyfile --replSet rs0"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: password
+    ports:
+      - "27017:27018"
+    volumes:
+      - ./keyfile:/etc/keyfile
+    restart: always
+
+  mongodb-rs1-0:
+    image: mongo:4.0.22-xenial
+    container_name: mongodb-rs1-0
+    command: "mongod --shardsvr --auth --keyFile /etc/keyfile --replSet rs1"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: password
+    ports:
+      - "27018:27018"
+    volumes:
+      - ./keyfile:/etc/keyfile
+    restart: always
+
+  mongodb-rs2-0:
+    image: mongo:4.0.22-xenial
+    container_name: mongodb-rs2-0
+    command: "mongod --shardsvr --auth --keyFile /etc/keyfile --replSet rs2"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: password
+    ports:
+      - "27019:27018"
+    volumes:
+      - ./keyfile:/etc/keyfile
+    restart: always
+
+  mongodb-cfg-0:
+    image: mongo:4.0.22-xenial
+    container_name: mongodb-cfg-0
+    command: "mongod --configsvr --keyFile /etc/keyfile --replSet cfg"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: password
+    ports:
+      - "27020:27019"
+    volumes:
+      - ./keyfile:/etc/keyfile
+    restart: always
+
+  mongos:
+    image: mongo:4.0.22-xenial
+    container_name: mongos
+    command: "mongos --port 27017 --configdb cfg/mongodb-cfg-0:27019 --keyFile /etc/keyfile --bind_ip_all"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: password
+    ports:
+      - "27021:27017"
+    volumes:
+      - ./keyfile:/etc/keyfile
+    restart: always
+
+
+  

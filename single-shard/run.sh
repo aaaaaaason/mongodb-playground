@@ -30,6 +30,10 @@ mongos)
     --authenticationDatabase=admin < $2
     ;;
 
+fix-keyfile)
+    sudo chown 999:999 keyfile && sudo chmod 600 keyfile
+    ;;
+
 init)
     ./run.sh rs0-0 initialize-shardsvr.js &&
     ./run.sh cfg-0 initialize-configsvr.js &&
