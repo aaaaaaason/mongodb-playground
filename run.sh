@@ -1,33 +1,40 @@
 MASTER_HOST=127.0.0.1
-MASTER_PORT=33060
+MASTER_PORT=27017
 
-SLAVE_HOST=127.0.0.1
-SLAVE_PORT=33061
+CONFIG_HOST=127.0.0.1
+CONFIG_PORT=27020
+
+MONGOS_HOST=127.0.0.1
+MONGOS_PORT=27021
 
 DB_USER=root
 DB_PASSWD=password
 
 case $1 in 
 
-create-replication-user)
-    mysql -h $MASTER_HOST -P $MASTER_PORT -u $DB_USER -p$DB_PASSWD < \
-    create-replication-user.sql
+rs0-0)
+    mongo --host=$MASTER_HOST --port=$MASTER_PORT \
+    -u $DB_USER -p $DB_PASSWD \
+    --authenticationDatabase=admin < $2
     ;;
 
-initialize-replication)
-    mysql -h $SLAVE_HOST -P $SLAVE_PORT -u $DB_USER -p$DB_PASSWD < \
-    initialize_replication.sql
+cfg-0)
+    mongo --host=$CONFIG_HOST --port=$CONFIG_PORT \
+    -u $DB_USER -p $DB_PASSWD \
+    --authenticationDatabase=admin < $2
     ;;
 
-init-database)
-    mysql -h $MASTER_HOST -P $MASTER_PORT -u $DB_USER -p$DB_PASSWD < \
-    init-database.sql
+mongos)
+    mongo --host=$MONGOS_HOST --port=$MONGOS_PORT \
+    -u $DB_USER -p $DB_PASSWD \
+    --authenticationDatabase=admin < $2
     ;;
 
-*)
-    ./run.sh create-replication-user &&
-    ./run.sh initialize-replication &&
-    ./run.sh init-database
+init)
+    ./run.sh rs0-0 initialize-shardsvr.js &&
+    ./run.sh cfg-0 initialize-configsvr.js &&
+    sleep 10 &&
+    ./run.sh mongos initialize-shard.js
     ;;
 
 esac

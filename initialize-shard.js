@@ -1,0 +1,1 @@
+sh.addShard("rs0/mongodb-rs0-0:27018,mongodb-rs0-1:27018,mongodb-rs0-2:27018")
